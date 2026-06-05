@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - DR Detection System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            background: url('https://images.unsplash.com/photo-1551190822-a9333d879b1f?w=1600') center/cover no-repeat fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.6), rgba(88, 28, 135, 0.6));
+        }
+
+        .container {
+            position: relative;
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        h1 {
+            color: white;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #bfdbfe;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: white;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input::placeholder {
+            color: #bfdbfe;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.3);
+        }
+
+        .icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #93c5fd;
+        }
+
+        .password-rules {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        .rule {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #d1d5db;
+            font-size: 12px;
+            margin: 5px 0;
+        }
+
+        .rule.valid {
+            color: #86efac;
+        }
+
+        .rule-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        .error {
+            color: #fca5a5;
+            font-size: 14px;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .success {
+            color: #86efac;
+            font-size: 14px;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .link {
+            color: #93c5fd;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+            cursor: pointer;
+            display: inline-block;
+            margin: 5px 0;
+        }
+
+        .link:hover {
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">👁</div>
+            <h1>DR Detection System</h1>
+            <p class="subtitle">Early detection saves vision</p>
+        </div>
+
+        <div id="loginForm">
+            <div class="form-group">
+                <label>Email</label>
+                <div class="input-wrapper">
+                    <span class="icon">✉</span>
+                    <input type="email" id="loginEmail" placeholder="Enter your email" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <div class="input-wrapper">
+                    <span class="icon">🔒</span>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                </div>
+            </div>
+
+            <div id="errorMsg" class="error"></div>
+
+            <button class="btn" onclick="handleLogin()">Login</button>
+
+            <div class="links">
+                <a class="link" onclick="showForgotPassword()">Forgot Password?</a><br>
+                <a class="link" onclick="window.location.href='register.html'">Create New Account</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="forgotModal" class="modal">
+        <div class="modal-content">
+            <h2 style="color: white; margin-bottom: 20px;">Reset Password</h2>
+            <div class="form-group">
+                <label>Email</label>
+                <div class="input-wrapper">
+                    <span class="icon">✉</span>
+                    <input type="email" id="resetEmail" placeholder="Enter your email" required>
+                </div>
+            </div>
+            <div id="resetMsg"></div>
+            <button class="btn" onclick="handleReset()">Send Reset Link</button>
+            <button class="btn" style="background: rgba(255,255,255,0.2); margin-top: 10px;" onclick="closeForgotPassword()">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        // Check if already logged in
+        window.onload = function() {
+            const user = localStorage.getItem('drUser');
+            if (user) {
+                const details = localStorage.getItem('drDetails');
+                if (details) {
+                    window.location.href = 'index.html';
+                } else {
+                    window.location.href = 'details.html';
+                }
+            }
+        };
+
+        function handleLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const errorMsg = document.getElementById('errorMsg');
+
+            if (!email || !password) {
+                errorMsg.textContent = 'Please fill in all fields';
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('drUsers') || '[]');
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                localStorage.setItem('drUser', JSON.stringify(user));
+                const details = localStorage.getItem('drDetails');
+                if (details) {
+                    window.location.href = 'index.html';
+                } else {
+                    window.location.href = 'details.html';
+                }
+            } else {
+                errorMsg.textContent = 'Invalid email or password';
+            }
+        }
+
+        function showForgotPassword() {
+            document.getElementById('forgotModal').classList.add('active');
+        }
+
+        function closeForgotPassword() {
+            document.getElementById('forgotModal').classList.remove('active');
+            document.getElementById('resetMsg').textContent = '';
+            document.getElementById('resetEmail').value = '';
+        }
+
+        function handleReset() {
+            const email = document.getElementById('resetEmail').value;
+            const resetMsg = document.getElementById('resetMsg');
+
+            if (!email) {
+                resetMsg.className = 'error';
+                resetMsg.textContent = 'Please enter your email';
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('drUsers') || '[]');
+            const user = users.find(u => u.email === email);
+
+            if (user) {
+                resetMsg.className = 'success';
+                resetMsg.textContent = 'Password reset link sent to your email!';
+                setTimeout(() => {
+                    closeForgotPassword();
+                }, 2000);
+            } else {
+                resetMsg.className = 'error';
+                resetMsg.textContent = 'Email not found';
+            }
+        }
+
+        // Allow Enter key to submit
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleLogin();
+            }
+        });
+    </script>
+</body>
+</html>

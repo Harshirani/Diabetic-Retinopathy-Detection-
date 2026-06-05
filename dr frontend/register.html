@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - DR Detection System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            background: url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1600') center/cover no-repeat fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(88, 28, 135, 0.6), rgba(30, 58, 138, 0.6));
+        }
+
+        .container {
+            position: relative;
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #a78bfa, #60a5fa);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        h1 {
+            color: white;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #ddd6fe;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: white;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input::placeholder {
+            color: #ddd6fe;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #a78bfa;
+            box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.3);
+        }
+
+        .icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #c4b5fd;
+        }
+
+        .password-rules {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        .rule {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #d1d5db;
+            font-size: 12px;
+            margin: 5px 0;
+        }
+
+        .rule.valid {
+            color: #86efac;
+        }
+
+        .rule-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        .error {
+            color: #fca5a5;
+            font-size: 14px;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .link {
+            color: #c4b5fd;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .link:hover {
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">👁</div>
+            <h1>Create Account</h1>
+            <p class="subtitle">Join our vision care community</p>
+        </div>
+
+        <div class="form-group">
+            <label>Email</label>
+            <div class="input-wrapper">
+                <span class="icon">✉</span>
+                <input type="email" id="registerEmail" placeholder="Enter your email" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            <div class="input-wrapper">
+                <span class="icon">🔒</span>
+                <input type="password" id="registerPassword" placeholder="Create a password" required oninput="validatePassword()">
+            </div>
+            <div class="password-rules">
+                <div class="rule" id="rule-length">
+                    <span class="rule-icon">❌</span>
+                    <span>At least 8 characters</span>
+                </div>
+                <div class="rule" id="rule-upper">
+                    <span class="rule-icon">❌</span>
+                    <span>At least 1 uppercase letter</span>
+                </div>
+                <div class="rule" id="rule-lower">
+                    <span class="rule-icon">❌</span>
+                    <span>At least 1 lowercase letter</span>
+                </div>
+                <div class="rule" id="rule-number">
+                    <span class="rule-icon">❌</span>
+                    <span>At least 1 number</span>
+                </div>
+                <div class="rule" id="rule-special">
+                    <span class="rule-icon">❌</span>
+                    <span>At least 1 special symbol</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="errorMsg" class="error"></div>
+
+        <button class="btn" onclick="handleRegister()">Create Account</button>
+
+        <div class="links">
+            <a class="link" onclick="window.location.href='login.html'">Already have an account? Login</a>
+        </div>
+    </div>
+
+    <script>
+        function validatePassword() {
+            const password = document.getElementById('registerPassword').value;
+            
+            const rules = {
+                length: password.length >= 8,
+                upper: /[A-Z]/.test(password),
+                lower: /[a-z]/.test(password),
+                number: /[0-9]/.test(password),
+                special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+            };
+
+            for (let rule in rules) {
+                const element = document.getElementById('rule-' + rule);
+                if (rules[rule]) {
+                    element.classList.add('valid');
+                    element.querySelector('.rule-icon').textContent = '✅';
+                } else {
+                    element.classList.remove('valid');
+                    element.querySelector('.rule-icon').textContent = '❌';
+                }
+            }
+
+            return rules;
+        }
+
+        function handleRegister() {
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const errorMsg = document.getElementById('errorMsg');
+
+            if (!email || !password) {
+                errorMsg.textContent = 'Please fill in all fields';
+                return;
+            }
+
+            const rules = validatePassword();
+            if (!Object.values(rules).every(v => v)) {
+                errorMsg.textContent = 'Password does not meet all requirements';
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('drUsers') || '[]');
+            if (users.find(u => u.email === email)) {
+                errorMsg.textContent = 'Email already exists';
+                return;
+            }
+
+            const newUser = { email, password };
+            users.push(newUser);
+            localStorage.setItem('drUsers', JSON.stringify(users));
+            localStorage.setItem('drUser', JSON.stringify(newUser));
+            
+            window.location.href = 'details.html';
+        }
+
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleRegister();
+            }
+        });
+    </script>
+</body>
+</html>

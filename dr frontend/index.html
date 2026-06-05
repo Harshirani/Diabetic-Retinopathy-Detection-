@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DR Detection System</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #0f172a, #1e3a8a, #0f172a);
+        min-height: 100vh;
+        color: white;
+      }
+
+      nav {
+        backdrop-filter: blur(20px);
+        background: rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 20px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .nav-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo-section {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .logo {
+        font-size: 32px;
+      }
+
+      .brand {
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      .user-section {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .logout-btn {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 20px;
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        border: none;
+        border-radius: 10px;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+
+      .logout-btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+
+      .section-title {
+        text-align: center;
+        font-size: 36px;
+        margin-bottom: 40px;
+        background: linear-gradient(135deg, #60a5fa, #a78bfa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .slider-container {
+        position: relative;
+        height: 500px;
+        border-radius: 30px;
+        overflow: hidden;
+        margin-bottom: 60px;
+        backdrop-filter: blur(20px);
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .slider {
+        display: flex;
+        height: 100%;
+        transition: transform 0.5s ease;
+      }
+
+      .slide {
+        min-width: 100%;
+        height: 100%;
+      }
+
+      .slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .slider-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(10px);
+        border: none;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: white;
+        transition: background 0.3s;
+        z-index: 10;
+      }
+
+      .slider-btn:hover {
+        background: rgba(255, 255, 255, 0.5);
+      }
+
+      .slider-btn.prev {
+        left: 20px;
+      }
+
+      .slider-btn.next {
+        right: 20px;
+      }
+
+      .upload-section {
+        backdrop-filter: blur(20px);
+        background: rgba(255, 255, 255, 0.1);
+        padding: 60px;
+        border-radius: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        margin-bottom: 40px;
+      }
+
+      .upload-area {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .upload-box {
+        border: 3px dashed #60a5fa;
+        border-radius: 20px;
+        padding: 60px 20px;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.05);
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-bottom: 30px;
+      }
+
+      .upload-box:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: #a78bfa;
+      }
+
+      .upload-icon {
+        font-size: 60px;
+        margin-bottom: 20px;
+      }
+
+      .upload-text {
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+
+      .upload-subtext {
+        color: #93c5fd;
+        font-size: 14px;
+      }
+
+      #fileInput {
+        display: none;
+      }
+
+      .preview-container {
+        margin-bottom: 30px;
+      }
+
+      .preview-img {
+        width: 100%;
+        max-width: 500px;
+        height: 300px;
+        object-fit: cover;
+        border-radius: 20px;
+        margin: 0 auto 20px;
+        display: block;
+      }
+
+      .analyze-btn {
+        width: 100%;
+        max-width: 500px;
+        display: block;
+        margin: 0 auto;
+        padding: 15px;
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        border: none;
+        border-radius: 15px;
+        color: white;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+
+      .analyze-btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .result-section {
+        backdrop-filter: blur(20px);
+        background: rgba(255, 255, 255, 0.1);
+        padding: 40px;
+        border-radius: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        margin-bottom: 40px;
+        display: none;
+      }
+
+      .result-section.active {
+        display: block;
+      }
+
+      .result-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+      }
+
+      .result-item {
+        background: rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        border-radius: 15px;
+      }
+
+      .result-label {
+        color: #93c5fd;
+        font-size: 14px;
+        margin-bottom: 5px;
+      }
+
+      .result-value {
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      footer {
+        text-align: center;
+        padding: 40px 20px;
+        color: #93c5fd;
+      }
+
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav>
+      <div class="nav-container">
+        <div class="logo-section">
+          <span class="logo">👁</span>
+          <span class="brand">DR Detection</span>
+        </div>
+        <div class="user-section">
+          <span id="welcomeMsg">Welcome 👋</span>
+          <button class="logout-btn" onclick="handleLogout()">
+            <span>🚪</span>
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <h2 class="section-title">Understanding Diabetic Retinopathy</h2>
+
+      <div class="slider-container">
+        <div class="slider" id="slider">
+          <div class="slide">
+            <img src="https://images.unsplash.com/photo-1631549916768-4119b2e5f926?w=1200" alt="Retina 1" />
+          </div>
+          <div class="slide">
+            <img src="https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=1200" alt="Retina 2" />
+          </div>
+          <div class="slide">
+            <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200" alt="Retina 3" />
+          </div>
+          <div class="slide">
+            <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=1200" alt="Retina 4" />
+          </div>
+          <div class="slide">
+            <img src="https://images.unsplash.com/photo-1582719366249-aba3f55a3eac?w=1200" alt="Retina 5" />
+          </div>
+        </div>
+
+        <button class="slider-btn prev" onclick="moveSlide(-1)">❮</button>
+        <button class="slider-btn next" onclick="moveSlide(1)">❯</button>
+      </div>
+
+      <div class="upload-section">
+        <h2 class="section-title">Upload Retina Image for Analysis</h2>
+        <div class="upload-area">
+          <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+            <div class="upload-icon">📤</div>
+            <div class="upload-text">Click to upload retina image</div>
+            <div class="upload-subtext">PNG, JPG up to 10MB</div>
+          </div>
+
+          <input type="file" id="fileInput" accept="image/*" onchange="handleImageUpload(event)" />
+
+          <div id="previewContainer" class="preview-container hidden">
+            <img id="previewImg" class="preview-img" alt="Preview" />
+            <button type= "button" class="analyze-btn" onclick="analyzeImage()">
+              Analyze Image
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="resultSection" class="result-section">
+        <h2 class="section-title">Analysis Results</h2>
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="result-label">Status</div>
+            <div class="result-value" id="resultStatus">-</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Confidence</div>
+            <div class="result-value" id="resultConfidence">-</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Severity</div>
+            <div class="result-value" id="resultSeverity">-</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Recommendation</div>
+            <div class="result-value" id="resultRecommendation">-</div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <p>© 2025 DR Detection System. For educational purposes only.</p>
+      </footer>
+    </div>
+
+    <script>
+      let currentSlide = 0;
+      let uploadedImage = null;
+
+      window.onload = function () {
+        const user = localStorage.getItem('drUser');
+        const details = localStorage.getItem('drDetails');
+
+        if (!user) {
+          window.location.href = 'login.html';
+          return;
+        }
+
+        if (!details) {
+          window.location.href = 'details.html';
+          return;
+        }
+
+        const userDetails = JSON.parse(details);
+        document.getElementById('welcomeMsg').textContent = `Welcome, ${userDetails.name} 👋`;
+
+        startAutoSlide();
+      };
+
+      // 🖼 SLIDER FUNCTIONS
+      function moveSlide(direction) {
+        const slider = document.getElementById('slider');
+        const slides = slider.children.length;
+        currentSlide += direction;
+
+        if (currentSlide < 0) currentSlide = slides - 1;
+        if (currentSlide >= slides) currentSlide = 0;
+
+        slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+      }
+
+      function startAutoSlide() {
+        setInterval(() => moveSlide(1), 3000);
+      }
+
+      // 🧠 IMAGE UPLOAD + ANALYSIS
+      function handleImageUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            uploadedImage = e.target.result;
+            document.getElementById('previewImg').src = uploadedImage;
+            document.getElementById('previewContainer').classList.remove('hidden');
+            document.getElementById('resultSection').classList.remove('active');
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+
+      async function analyzeImage() {
+        const fileInput = document.getElementById('fileInput');
+        const file = fileInput.files[0];
+
+        if (!file) {
+          alert('Please upload a retina image first.');
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        document.getElementById('resultStatus').textContent = 'Analyzing...';
+        document.getElementById('resultSection').classList.add('active');
+
+        try {
+          const response = await fetch('http://127.0.0.1:5000/predict', {
+            method: 'POST',
+            body: formData,
+          });
+
+          const result = await response.json();
+
+          if (result.error) {
+            alert('Error: ' + result.error);
+            return;
+          }
+
+          document.getElementById('resultStatus').textContent = result.predicted_class;
+          document.getElementById('resultConfidence').textContent =
+            (result.confidence * 100).toFixed(2) + '%';
+          document.getElementById('resultSeverity').textContent = result.predicted_class;
+          document.getElementById('resultRecommendation').textContent =
+            'Consult your eye specialist for confirmation.';
+        } catch (err) {
+          console.error('Error:', err);
+          alert('Could not connect to backend. Make sure Flask is running.');
+        }
+      }
+
+      // 🚪 LOGOUT
+      function handleLogout() {
+        if (confirm('Are you sure you want to logout?')) {
+          localStorage.removeItem('drUser');
+          localStorage.removeItem('drDetails');
+          window.location.href = 'login.html';
+        }
+      }
+    </script>
+  </body>
+</html>

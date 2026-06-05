@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Details - DR Detection System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            background: url('https://images.unsplash.com/photo-1666214280557-f1b5022eb634?w=1600') center/cover no-repeat fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(8, 145, 178, 0.6), rgba(30, 58, 138, 0.6));
+        }
+
+        .container {
+            position: relative;
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #22d3ee, #60a5fa);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        h1 {
+            color: white;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #a5f3fc;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: white;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input::placeholder {
+            color: #a5f3fc;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #22d3ee;
+            box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.3);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .radio-option input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .error {
+            color: #fca5a5;
+            font-size: 14px;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #22d3ee, #3b82f6);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(34, 211, 238, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .radio-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">👤</div>
+            <h1>Tell Us About You</h1>
+            <p class="subtitle">Complete your profile</p>
+        </div>
+
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="userName" placeholder="Enter your name" required>
+        </div>
+
+        <div class="form-group">
+            <label>Age</label>
+            <input type="number" id="userAge" placeholder="Enter your age" required min="1" max="120">
+        </div>
+
+        <div class="form-group">
+            <label>Gender</label>
+            <div class="radio-group">
+                <label class="radio-option">
+                    <input type="radio" name="gender" value="Male" required>
+                    <span>Male</span>
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="gender" value="Female" required>
+                    <span>Female</span>
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="gender" value="Other" required>
+                    <span>Other</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>City</label>
+            <input type="text" id="userCity" placeholder="Enter your city" required>
+        </div>
+
+        <div id="errorMsg" class="error"></div>
+
+        <button class="btn" onclick="handleSaveDetails()">Save & Continue</button>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const user = localStorage.getItem('drUser');
+            if (!user) {
+                window.location.href = 'login.html';
+            }
+        };
+
+        function handleSaveDetails() {
+            const name = document.getElementById('userName').value;
+            const age = document.getElementById('userAge').value;
+            const gender = document.querySelector('input[name="gender"]:checked');
+            const city = document.getElementById('userCity').value;
+            const errorMsg = document.getElementById('errorMsg');
+
+            if (!name || !age || !gender || !city) {
+                errorMsg.textContent = 'Please fill in all fields';
+                return;
+            }
+
+            if (age < 1 || age > 120) {
+                errorMsg.textContent = 'Please enter a valid age';
+                return;
+            }
+
+            const details = {
+                name,
+                age,
+                gender: gender.value,
+                city
+            };
+
+            localStorage.setItem('drDetails', JSON.stringify(details));
+            window.location.href = 'index.html';
+        }
+
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleSaveDetails();
+            }
+        });
+    </script>
+</body>
+</html>
